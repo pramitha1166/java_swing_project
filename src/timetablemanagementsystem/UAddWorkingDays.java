@@ -48,7 +48,7 @@ public class UAddWorkingDays extends javax.swing.JFrame {
         btn_addWorkingDays.setBackground(new java.awt.Color(8,142,88));
     }
 
-    
+    //sad
     private void dbconnection() {
         final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
         final String JDBC_URL = "jdbc:derby:C:/Derby/TTMS;create=true";
@@ -100,13 +100,39 @@ public class UAddWorkingDays extends javax.swing.JFrame {
         table_model.setRowCount(0);
         Object[] row = new Object[3];
         
+        int hr_count=0;
+        
         for(int i=0;i<dayList.size();i++) {
+            
+            if(dayList.get(i).isMonday()) {
+                hr_count++;
+            }else if (dayList.get(i).isTuesday()) {
+                hr_count++;
+            }
+            else if (dayList.get(i).isWednesday()) {
+                hr_count++;
+            }
+            else if (dayList.get(i).isThrusday()) {
+                hr_count++;
+            }
+            else if (dayList.get(i).isFriday()) {
+                hr_count++;
+            }
+            else if (dayList.get(i).isSaterday()) {
+                hr_count++;
+            }
+            else if (dayList.get(i).isSaterday()) {
+                hr_count++;
+            }
+            
             row[0] = dayList.get(i).getId();
             row[1] = dayList.get(i).getNumof_workingdays();
-            row[2] = dayList.get(i).getNumof_hours();
+            row[2] = dayList.get(i).getNumof_hours()*hr_count;
           
             table_model.addRow(row);
         }
+        
+       // hr_count = 0;
         
     }
     
@@ -291,7 +317,7 @@ public class UAddWorkingDays extends javax.swing.JFrame {
 
         jPanel6.setBackground(new java.awt.Color(247, 247, 247));
         jPanel6.setPreferredSize(new java.awt.Dimension(625, 329));
-        jPanel6.setLayout(new javax.swing.OverlayLayout(jPanel6));
+        jPanel6.setLayout(new java.awt.CardLayout());
 
         jp_addWorkingDays.setBackground(new java.awt.Color(247, 247, 247));
 
@@ -453,7 +479,7 @@ public class UAddWorkingDays extends javax.swing.JFrame {
                 .addGap(89, 89, 89))
         );
 
-        jPanel6.add(jp_addWorkingDays);
+        jPanel6.add(jp_addWorkingDays, "card2");
 
         jp_manageWorkingDays.setBackground(new java.awt.Color(247, 247, 247));
 
@@ -682,7 +708,7 @@ public class UAddWorkingDays extends javax.swing.JFrame {
                         .addGap(58, 58, 58))))
         );
 
-        jPanel6.add(jp_manageWorkingDays);
+        jPanel6.add(jp_manageWorkingDays, "card3");
 
         JPanel7.setBackground(new java.awt.Color(20, 181, 117));
         JPanel7.setLayout(new javax.swing.OverlayLayout(JPanel7));

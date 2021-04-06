@@ -278,6 +278,8 @@
               <Dimension value="[625, 329]"/>
             </Property>
           </Properties>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignCardLayout"/>
           <SubComponents>
             <Container class="javax.swing.JPanel" name="jp_addWorkingDays">
               <Properties>
@@ -285,6 +287,11 @@
                   <Color blue="f7" green="f7" red="f7" type="rgb"/>
                 </Property>
               </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+                  <CardConstraints cardName="card2"/>
+                </Constraint>
+              </Constraints>
 
               <Layout>
                 <DimensionLayout dim="0">
@@ -580,6 +587,11 @@
                   <Color blue="f7" green="f7" red="f7" type="rgb"/>
                 </Property>
               </Properties>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+                  <CardConstraints cardName="card3"/>
+                </Constraint>
+              </Constraints>
 
               <Layout>
                 <DimensionLayout dim="0">
@@ -949,65 +961,6 @@
               </SubComponents>
             </Container>
           </SubComponents>
-          <LayoutCode>
-            <CodeStatement>
-              <CodeExpression id="1_jPanel6">
-                <CodeVariable name="jPanel6" type="8194" declaredType="javax.swing.JPanel"/>
-                <ExpressionOrigin>
-                  <ExpressionProvider type="ComponentRef">
-                    <ComponentRef name="jPanel6"/>
-                  </ExpressionProvider>
-                </ExpressionOrigin>
-              </CodeExpression>
-              <StatementProvider type="CodeMethod">
-                <CodeMethod name="setLayout" class="java.awt.Container" parameterTypes="java.awt.LayoutManager"/>
-              </StatementProvider>
-              <Parameters>
-                <CodeExpression id="2">
-                  <ExpressionOrigin>
-                    <ExpressionProvider type="CodeConstructor">
-                      <CodeConstructor class="javax.swing.OverlayLayout" parameterTypes="java.awt.Container"/>
-                    </ExpressionProvider>
-                    <Parameters>
-                      <CodeExpression id="1_jPanel6"/>
-                    </Parameters>
-                  </ExpressionOrigin>
-                </CodeExpression>
-              </Parameters>
-            </CodeStatement>
-            <CodeStatement>
-              <CodeExpression id="1_jPanel6"/>
-              <StatementProvider type="CodeMethod">
-                <CodeMethod name="add" class="java.awt.Container" parameterTypes="java.awt.Component"/>
-              </StatementProvider>
-              <Parameters>
-                <CodeExpression id="3_jp_addWorkingDays">
-                  <CodeVariable name="jp_addWorkingDays" type="8194" declaredType="javax.swing.JPanel"/>
-                  <ExpressionOrigin>
-                    <ExpressionProvider type="ComponentRef">
-                      <ComponentRef name="jp_addWorkingDays"/>
-                    </ExpressionProvider>
-                  </ExpressionOrigin>
-                </CodeExpression>
-              </Parameters>
-            </CodeStatement>
-            <CodeStatement>
-              <CodeExpression id="1_jPanel6"/>
-              <StatementProvider type="CodeMethod">
-                <CodeMethod name="add" class="java.awt.Container" parameterTypes="java.awt.Component"/>
-              </StatementProvider>
-              <Parameters>
-                <CodeExpression id="4_jp_manageWorkingDays">
-                  <CodeVariable name="jp_manageWorkingDays" type="8194" declaredType="javax.swing.JPanel"/>
-                  <ExpressionOrigin>
-                    <ExpressionProvider type="ComponentRef">
-                      <ComponentRef name="jp_manageWorkingDays"/>
-                    </ExpressionProvider>
-                  </ExpressionOrigin>
-                </CodeExpression>
-              </Parameters>
-            </CodeStatement>
-          </LayoutCode>
         </Container>
         <Container class="javax.swing.JPanel" name="JPanel7">
           <Properties>
@@ -1153,7 +1106,7 @@
           </SubComponents>
           <LayoutCode>
             <CodeStatement>
-              <CodeExpression id="5_JPanel7">
+              <CodeExpression id="1_JPanel7">
                 <CodeVariable name="JPanel7" type="8194" declaredType="javax.swing.JPanel"/>
                 <ExpressionOrigin>
                   <ExpressionProvider type="ComponentRef">
@@ -1165,25 +1118,25 @@
                 <CodeMethod name="setLayout" class="java.awt.Container" parameterTypes="java.awt.LayoutManager"/>
               </StatementProvider>
               <Parameters>
-                <CodeExpression id="6">
+                <CodeExpression id="2">
                   <ExpressionOrigin>
                     <ExpressionProvider type="CodeConstructor">
                       <CodeConstructor class="javax.swing.OverlayLayout" parameterTypes="java.awt.Container"/>
                     </ExpressionProvider>
                     <Parameters>
-                      <CodeExpression id="5_JPanel7"/>
+                      <CodeExpression id="1_JPanel7"/>
                     </Parameters>
                   </ExpressionOrigin>
                 </CodeExpression>
               </Parameters>
             </CodeStatement>
             <CodeStatement>
-              <CodeExpression id="5_JPanel7"/>
+              <CodeExpression id="1_JPanel7"/>
               <StatementProvider type="CodeMethod">
                 <CodeMethod name="add" class="java.awt.Container" parameterTypes="java.awt.Component"/>
               </StatementProvider>
               <Parameters>
-                <CodeExpression id="7_addWorkingDays_TopBar">
+                <CodeExpression id="3_addWorkingDays_TopBar">
                   <CodeVariable name="addWorkingDays_TopBar" type="8194" declaredType="javax.swing.JPanel"/>
                   <ExpressionOrigin>
                     <ExpressionProvider type="ComponentRef">
@@ -1194,12 +1147,12 @@
               </Parameters>
             </CodeStatement>
             <CodeStatement>
-              <CodeExpression id="5_JPanel7"/>
+              <CodeExpression id="1_JPanel7"/>
               <StatementProvider type="CodeMethod">
                 <CodeMethod name="add" class="java.awt.Container" parameterTypes="java.awt.Component"/>
               </StatementProvider>
               <Parameters>
-                <CodeExpression id="8_manageWorkingDays_Topbar">
+                <CodeExpression id="4_manageWorkingDays_Topbar">
                   <CodeVariable name="manageWorkingDays_Topbar" type="8194" declaredType="javax.swing.JPanel"/>
                   <ExpressionOrigin>
                     <ExpressionProvider type="ComponentRef">

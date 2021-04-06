@@ -1,0 +1,10 @@
+----------------------------------------------------------------
+Wed Apr 07 04:00:28 IST 2021:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.9.1.0 - (1344872): instance a816c00e-0178-a94e-f748-000007369c00 
+on database directory C:\Derby\TTMS  with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@5c29bfd 
+Loaded from file:/C:/Program%20Files/glassfish-4.0/javadb/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=11.0.9+7-LTS
+user.dir=E:\TTMSSystem\TimeTableManagementSystem-ITPM-master
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
