@@ -5,6 +5,19 @@
  */
 package timetablemanagementsystem;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 /**
  *
  * @author umesha
@@ -14,10 +27,147 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
     /**
      * Creates new form UGenerateTimeSlots
      */
+    
+    private TimeSlotModel timeSlotModel;
+    private Connection connection;
+    private Statement statement;
+    private PreparedStatement preparedStatement;
+    private int time_id;
+            
     public UGenerateTimeSlots() {
+        dbconnection();
         initComponents();
+        initTImeSolts();
+        initTable();
     }
 
+      private void dbconnection() {
+        final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
+        final String JDBC_URL = "jdbc:derby:C:/Derby/TTMS;create=true";
+        
+        try {
+            Class.forName(DRIVER);
+            connection = DriverManager.getConnection(JDBC_URL);
+            System.out.println("DB connected");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AAddBuildings.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AAddBuildings.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }  
+    }
+    
+    public void initTImeSolts() {
+        this.timeSolts.addItem("08.30-10.30");
+        this.timeSolts.addItem("10.30-11.30");
+        this.timeSolts.addItem("11.30-12.00 Break");
+        this.timeSolts.addItem("12.00-3.00");
+        this.timeSolts.addItem("03.00-5.00");
+        this.timeSolts.addItem("05.00-5.30");
+    }
+    
+    public ArrayList getTimeTableVal() {
+        
+        ArrayList<TimeSlotModel> timeTableSlots = new ArrayList<>();
+        
+        String query = "select * from timeslots";
+        
+        try {
+           statement = connection.createStatement();
+           ResultSet res = statement.executeQuery(query);
+            
+            while(res.next()) {
+                timeSlotModel = new TimeSlotModel(res.getInt("slotid"),res.getString("slot"));
+                timeTableSlots.add(timeSlotModel);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(UGenerateTimeSlots.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return timeTableSlots;
+    }
+    
+    public void initTable() {
+        ArrayList<TimeSlotModel> list = getTimeTableVal();
+        DefaultTableModel table_model = (DefaultTableModel) display_table.getModel();
+        table_model.setRowCount(0);
+        Object[] row = new Object[2];
+        
+        for(int i = 0;i<list.size();i++) {
+            row[0] = list.get(i).getSlotid();
+            row[1] = list.get(i).getSlot();
+             table_model.addRow(row);
+        }
+        
+    }
+  
+    public void addTImeSlot() {
+        
+        String slotVal = this.timeSolts.getSelectedItem().toString();
+        
+        String query = "insert into timeslots(slot) values(?)";
+        
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, slotVal);
+            preparedStatement.execute();
+            
+            DefaultTableModel model = (DefaultTableModel) display_table.getModel();
+            model.setRowCount(0);
+            initTable();
+            
+            JOptionPane.showMessageDialog(null, "Time Slot Added Successfully. \n Thank You!");
+        } catch (SQLException ex) {
+             JOptionPane.showMessageDialog(null, "Something went wrong! Please try again.");
+            Logger.getLogger(UGenerateTimeSlots.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    public void deleteSlot() {
+        
+        String query = "delete from timeslots where slotid=?";
+        
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, time_id);
+            preparedStatement.execute();
+            JOptionPane.showMessageDialog(null, "Time Slot Deleted Successfully. \n Thank You!");
+            
+            DefaultTableModel model = (DefaultTableModel) display_table.getModel();
+            model.setRowCount(0);
+            initTable();
+            
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Something went wrong! Please try again.");
+            Logger.getLogger(UGenerateTimeSlots.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    public void refreshSlots() {
+        
+        String query = "delete from timeslots";
+        
+        try {
+            preparedStatement = connection.prepareCall(query);
+            preparedStatement.execute();
+            
+            JOptionPane.showMessageDialog(null, "Refresh Time Slots Successfully. \n Thank You!");
+            
+            DefaultTableModel model = (DefaultTableModel) display_table.getModel();
+            model.setRowCount(0);
+            initTable();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Something went wrong! Please try again.");
+            Logger.getLogger(UGenerateTimeSlots.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }
+  
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -40,8 +190,10 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        timeSolts = new javax.swing.JComboBox<>();
         jButton4 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        display_table = new javax.swing.JTable();
         JPanel7 = new javax.swing.JPanel();
         GenarateTimeSlots_TopBar = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -150,7 +302,12 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Time" }));
+        timeSolts.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Time" }));
+        timeSolts.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                timeSoltsActionPerformed(evt);
+            }
+        });
 
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
@@ -164,6 +321,35 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
             }
         });
 
+        display_table.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Solt ID", "Time Slot", "Monday", "Tusday", "WednesDay", "Thrusday", "Friday", "SaterDay", "Sunday"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        display_table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                display_tableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(display_table);
+        if (display_table.getColumnModel().getColumnCount() > 0) {
+            display_table.getColumnModel().getColumn(1).setPreferredWidth(300);
+        }
+
         javax.swing.GroupLayout jp_GenerateTimeSlotsLayout = new javax.swing.GroupLayout(jp_GenerateTimeSlots);
         jp_GenerateTimeSlots.setLayout(jp_GenerateTimeSlotsLayout);
         jp_GenerateTimeSlotsLayout.setHorizontalGroup(
@@ -174,15 +360,19 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jp_GenerateTimeSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jp_GenerateTimeSlotsLayout.createSequentialGroup()
+                        .addComponent(timeSolts, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp_GenerateTimeSlotsLayout.createSequentialGroup()
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(208, 208, 208))
-                    .addGroup(jp_GenerateTimeSlotsLayout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(208, 208, 208))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp_GenerateTimeSlotsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(107, 107, 107))
         );
         jp_GenerateTimeSlotsLayout.setVerticalGroup(
             jp_GenerateTimeSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -190,9 +380,11 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
                 .addGap(39, 39, 39)
                 .addGroup(jp_GenerateTimeSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(timeSolts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 289, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(jp_GenerateTimeSlotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -202,7 +394,7 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
         jPanel6.add(jp_GenerateTimeSlots);
 
         JPanel7.setBackground(new java.awt.Color(20, 181, 117));
-        JPanel7.setLayout(new javax.swing.OverlayLayout(JPanel7));
+        JPanel7.setLayout(new java.awt.CardLayout());
 
         GenarateTimeSlots_TopBar.setBackground(new java.awt.Color(20, 181, 117));
 
@@ -243,7 +435,7 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
                 .addContainerGap(67, Short.MAX_VALUE))
         );
 
-        JPanel7.add(GenarateTimeSlots_TopBar);
+        JPanel7.add(GenarateTimeSlots_TopBar, "card2");
 
         GenerateTimeSlots_Topbar.setBackground(new java.awt.Color(20, 181, 117));
 
@@ -284,7 +476,7 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
                 .addContainerGap(70, Short.MAX_VALUE))
         );
 
-        JPanel7.add(GenerateTimeSlots_Topbar);
+        JPanel7.add(GenerateTimeSlots_Topbar, "card3");
 
         javax.swing.GroupLayout Background_pnlLayout = new javax.swing.GroupLayout(Background_pnl);
         Background_pnl.setLayout(Background_pnlLayout);
@@ -350,10 +542,12 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        deleteSlot();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        addTImeSlot();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -366,7 +560,23 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        refreshSlots();
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void timeSoltsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeSoltsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_timeSoltsActionPerformed
+
+    private void display_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_display_tableMouseClicked
+        // TODO add your handling code here:
+        
+        int i = display_table.getSelectedRow();
+        
+        TableModel model = display_table.getModel();
+        
+        time_id = (int) model.getValueAt(i, 0);
+        
+    }//GEN-LAST:event_display_tableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -411,12 +621,12 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
     private javax.swing.JPanel JPanel7;
     private javax.swing.JPanel SidePanel;
     private javax.swing.JPanel btn_GenerateTimeSlots;
+    private javax.swing.JTable display_table;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -425,6 +635,8 @@ public class UGenerateTimeSlots extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jp_GenerateTimeSlots;
+    private javax.swing.JComboBox<String> timeSolts;
     // End of variables declaration//GEN-END:variables
 }
