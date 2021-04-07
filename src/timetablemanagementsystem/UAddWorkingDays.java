@@ -106,22 +106,22 @@ public class UAddWorkingDays extends javax.swing.JFrame {
             
             if(dayList.get(i).isMonday()) {
                 hr_count++;
-            }else if (dayList.get(i).isTuesday()) {
+            } if (dayList.get(i).isTuesday()) {
                 hr_count++;
             }
-            else if (dayList.get(i).isWednesday()) {
+             if (dayList.get(i).isWednesday()) {
                 hr_count++;
             }
-            else if (dayList.get(i).isThrusday()) {
+             if (dayList.get(i).isThrusday()) {
                 hr_count++;
             }
-            else if (dayList.get(i).isFriday()) {
+             if (dayList.get(i).isFriday()) {
                 hr_count++;
             }
-            else if (dayList.get(i).isSaterday()) {
+             if (dayList.get(i).isSaterday()) {
                 hr_count++;
             }
-            else if (dayList.get(i).isSaterday()) {
+             if (dayList.get(i).isSaterday()) {
                 hr_count++;
             }
             
@@ -132,7 +132,7 @@ public class UAddWorkingDays extends javax.swing.JFrame {
             table_model.addRow(row);
         }
         
-       // hr_count = 0;
+       hr_count = 0;
         
     }
     
@@ -898,41 +898,70 @@ public class UAddWorkingDays extends javax.swing.JFrame {
         boolean updated_saterday = update_saterday.getState();
         boolean updated_sunday = update_sunday.getState();
         
+        int u_day_count = 0;
+        int u_working_day_count = Integer.parseInt(updated_workingdays.split(" ")[0]);
+        
+        if(updated_monday) {
+            u_day_count++;
+        }
+        if(updated_tuestday) {
+            u_day_count++;
+        }
+        if(updated_wednesday) {
+            u_day_count++;
+        }
+        if(updated_thrusday) {
+            u_day_count++;
+        }
+        if(updated_friday) {
+            u_day_count++;
+        }
+        if(updated_saterday) {
+            u_day_count++;
+        }
+        if(updated_saterday) {
+            u_day_count++;
+        }
+        if(updated_sunday) {
+            u_day_count++;
+        }
+        
+        if(u_working_day_count==u_day_count) {
+              try {
+                String query = "update workingdays "+"set workinghours = ?, workingminiutes = ?, noofworkingdays = ?, monday = ?, tuesday = ?, wednesday = ?, thrusday = ?, friday = ?, saterday = ?, sunday = ? " + "where workingdaysid = ?";
+                preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setInt(1, updated_hours);
+                preparedStatement.setInt(2, updated_miniutes);
+                preparedStatement.setString(3, updated_workingdays);
+                preparedStatement.setBoolean(4, updated_monday);
+                preparedStatement.setBoolean(5, updated_tuestday);
+                preparedStatement.setBoolean(6, updated_wednesday);
+                preparedStatement.setBoolean(7, updated_thrusday);
+                preparedStatement.setBoolean(8, updated_friday);
+                preparedStatement.setBoolean(9, updated_saterday);
+                preparedStatement.setBoolean(10, updated_sunday);
+                preparedStatement.setInt(11, workingDayID);
+
+                preparedStatement.execute();
+
+                JOptionPane.showMessageDialog(null, "Room details updated successfully");
+
+
+                DefaultTableModel model = (DefaultTableModel) display_table.getModel();
+                model.setRowCount(0);
+                ShowWorkingDayTable();
+
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Something went wrong! Please try again.");
+                Logger.getLogger(UAddWorkingDays.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+             JOptionPane.showMessageDialog(null, "Selected number of working days must equal number of working days!");
+        }
+        
         //  String query = "insert into workingdays(workinghours,workingminiutes,noofworkingdays, monday, tuesday, wednesday, thrusday, friday, saterday, sunday) values(?,?,?,?,?,?,?,?,?,?)";
         
-        String query = "update workingdays "+"set workinghours = ?, workingminiutes = ?, noofworkingdays = ?, monday = ?, tuesday = ?, wednesday = ?, thrusday = ?, friday = ?, saterday = ?, sunday = ? " + "where workingdaysid = ?";
-        
-        try {
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, updated_hours);
-            preparedStatement.setInt(2, updated_miniutes);
-            preparedStatement.setString(3, updated_workingdays);
-            preparedStatement.setBoolean(4, updated_monday);
-            preparedStatement.setBoolean(5, updated_tuestday);
-            preparedStatement.setBoolean(6, updated_wednesday);
-            preparedStatement.setBoolean(7, updated_thrusday);
-            preparedStatement.setBoolean(8, updated_friday);
-            preparedStatement.setBoolean(9, updated_saterday);
-            preparedStatement.setBoolean(10, updated_sunday);
-            preparedStatement.setInt(11, workingDayID);
-            
-            preparedStatement.execute();
-            
-            JOptionPane.showMessageDialog(null, "Room details updated successfully");
-
-            
-            DefaultTableModel model = (DefaultTableModel) display_table.getModel();
-            model.setRowCount(0);
-            ShowWorkingDayTable();
-            
-            
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Something went wrong! Please try again.");
-            Logger.getLogger(UAddWorkingDays.class.getName()).log(Level.SEVERE, null, ex);
-        }
-      
-       
-       
         
     }//GEN-LAST:event_btnupdateActionPerformed
 
@@ -1009,7 +1038,29 @@ public class UAddWorkingDays extends javax.swing.JFrame {
        this.fridayV = friday.getState();
        this.saterdayV = saterday.getState();
        this.sundayV = sunday.getState();
-        
+       
+       int day_count = 0;
+       
+       if(mondayV) {
+          day_count++; 
+       }if(tuesdayV) {
+           day_count++;
+       }if(wednsdayV) {
+           day_count++;
+       }if(thrusdayV) {
+           day_count++;
+       }if(fridayV) {
+           day_count++;
+       }if(saterdayV) {
+           day_count++;
+       }if(sundayV) {
+           day_count++;
+       }
+       
+       int working_day_count = Integer.parseInt(numof_workingdays.split(" ")[0]);
+       
+       if(working_day_count==day_count) {
+          
         System.out.println(numof_workingdays);
         System.out.println(numof_miniutes);
         System.out.println(mondayV);
@@ -1047,7 +1098,12 @@ public class UAddWorkingDays extends javax.swing.JFrame {
         } catch (SQLException ex) {
              JOptionPane.showMessageDialog(null, "Something went wrong! Please try again.");
             Logger.getLogger(UAddWorkingDays.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
+       } else {
+           
+           JOptionPane.showMessageDialog(null, "Selected days must equal to number of days!");
+       }
+       
         
     }//GEN-LAST:event_addWorkingDaysActionPerformed
 
@@ -1065,7 +1121,7 @@ public class UAddWorkingDays extends javax.swing.JFrame {
        // System.out.println(model.getValueAt(i, 2).toString());
         
         update_workingdays.setSelectedItem(model.getValueAt(i, 1).toString());
-        update_hours.setValue(model.getValueAt(i, 2));
+       // update_hours.setValue(model.getValueAt(i, 2));
         workingDayID =  (int) model.getValueAt(i, 0);
         
         String query = "select * from workingdays where workingdaysid= ?";
@@ -1077,6 +1133,7 @@ public class UAddWorkingDays extends javax.swing.JFrame {
             
             while(res.next()) {
                 
+                update_hours.setValue(res.getInt("workinghours"));
                 update_monday.setState(res.getBoolean("monday"));
                 update_tuesday.setState(res.getBoolean("tuesday"));
                 update_wednesday.setState(res.getBoolean("wednesday"));
